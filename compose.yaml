@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: pocketpay
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pocketpay
+    ports:
+      - "5432:5432"
+    restart: always
