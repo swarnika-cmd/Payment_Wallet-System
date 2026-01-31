@@ -19,6 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @org.springframework.cache.annotation.Cacheable("users")
     public UserDetails loadUserByUsername(String mobileNumber) throws UsernameNotFoundException {
         // We use mobileNumber as the username
         User user = userRepository.findByMobileNumber(mobileNumber)
