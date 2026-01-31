@@ -14,6 +14,7 @@ public class Wallet {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     public Wallet() {
