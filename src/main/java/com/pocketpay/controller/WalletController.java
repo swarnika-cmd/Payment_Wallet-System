@@ -80,6 +80,26 @@ public class WalletController {
         return ResponseEntity.ok(history);
     }
 
+    @PostMapping("/transactions/search")
+    public ResponseEntity<Page<TransactionResponse>> searchTransactions(
+            @Parameter(hidden = true) Authentication authentication,
+            @RequestBody com.pocketpay.dto.TransactionSearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "timestamp") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
+
+        String loggedInMobile = authentication.getName();
+        Sort sort = direction.equalsIgnoreCase("ASC") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Transaction> transactions = walletService.searchTransactions(loggedInMobile, criteria, pageable);
+        // Map Page<Transaction> to Page<TransactionResponse>
+        Page<TransactionResponse> response = transactions.map(this::mapToResponse);
+
+        return ResponseEntity.ok(response);
+    }
+
     private TransactionResponse mapToResponse(Transaction txn) {
         return new TransactionResponse(
                 txn.getId(),

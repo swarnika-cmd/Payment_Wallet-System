@@ -162,4 +162,15 @@ public class WalletService {
     public Page<Transaction> getTransactionHistory(String mobileNumber, Pageable pageable) {
         return transactionRepository.findBySenderMobileOrReceiverMobile(mobileNumber, mobileNumber, pageable);
     }
+
+    public Page<Transaction> searchTransactions(String mobileNumber,
+            com.pocketpay.dto.TransactionSearchCriteria criteria, Pageable pageable) {
+        User user = userRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        org.springframework.data.jpa.domain.Specification<Transaction> spec = com.pocketpay.specification.TransactionSpecifications
+                .getTransactionsByCriteria(user.getWallet(), criteria);
+
+        return transactionRepository.findAll(spec, pageable);
+    }
 }
