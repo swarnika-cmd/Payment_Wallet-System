@@ -12,6 +12,7 @@ public class User {
 
     private String name;
     private String mobileNumber;
+    private String email;
 
     private String password;
     private String role; // e.g., "ROLE_USER"
@@ -57,6 +58,14 @@ public class User {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

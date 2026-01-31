@@ -28,15 +28,17 @@ public class AuthController {
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.pocketpay.service.NotificationService notificationService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
             UserRepository userRepository, WalletRepository walletRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, com.pocketpay.service.NotificationService notificationService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.walletRepository = walletRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/register")
@@ -52,6 +54,7 @@ public class AuthController {
                 request.getMobileNumber(),
                 passwordEncoder.encode(request.getPassword()),
                 "ROLE_USER");
+        newUser.setEmail(request.getEmail());
         userRepository.save(newUser);
 
         // 3. Create Piggybank Wallet (Balance 0.0)
@@ -59,6 +62,9 @@ public class AuthController {
         walletRepository.save(newWallet);
         newUser.setWallet(newWallet);
         userRepository.save(newUser);
+
+        // 4. Send Welcome Email
+        notificationService.sendWelcomeEmail(request.getMobileNumber(), request.getName());
 
         return ResponseEntity.ok("User registered successfully with 0.0 balance. Please login.");
     }
