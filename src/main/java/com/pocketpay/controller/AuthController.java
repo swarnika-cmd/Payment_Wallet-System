@@ -55,7 +55,7 @@ public class AuthController {
         userRepository.save(newUser);
 
         // 3. Create Piggybank Wallet (Balance 0.0)
-        Wallet newWallet = new Wallet(0.0, newUser);
+        Wallet newWallet = new Wallet(java.math.BigDecimal.ZERO, newUser);
         walletRepository.save(newWallet);
         newUser.setWallet(newWallet);
         userRepository.save(newUser);

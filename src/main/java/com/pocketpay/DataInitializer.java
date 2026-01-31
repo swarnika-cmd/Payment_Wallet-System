@@ -29,7 +29,7 @@ public class DataInitializer {
                 userRepository.save(arjun);
 
                 // Give Arjun 1000 Rupees
-                Wallet arjunWallet = new Wallet(1000.0, arjun);
+                Wallet arjunWallet = new Wallet(new java.math.BigDecimal("1000.0"), arjun);
                 walletRepository.save(arjunWallet);
                 arjun.setWallet(arjunWallet);
                 userRepository.save(arjun);
@@ -42,7 +42,7 @@ public class DataInitializer {
                 userRepository.save(radha);
 
                 // Give Radha 0 Rupees
-                Wallet radhaWallet = new Wallet(0.0, radha);
+                Wallet radhaWallet = new Wallet(java.math.BigDecimal.ZERO, radha);
                 walletRepository.save(radhaWallet);
                 radha.setWallet(radhaWallet);
                 userRepository.save(radha);

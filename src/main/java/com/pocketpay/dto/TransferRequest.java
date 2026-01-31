@@ -4,6 +4,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.math.BigDecimal;
 
 public class TransferRequest {
     @NotBlank(message = "Sender mobile is required")
@@ -16,12 +17,12 @@ public class TransferRequest {
 
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "1.0", message = "Minimum transfer amount is 1.0")
-    private Double amount;
+    private BigDecimal amount;
 
     public TransferRequest() {
     }
 
-    public TransferRequest(String senderMobile, String receiverMobile, Double amount) {
+    public TransferRequest(String senderMobile, String receiverMobile, BigDecimal amount) {
         this.senderMobile = senderMobile;
         this.receiverMobile = receiverMobile;
         this.amount = amount;
@@ -43,11 +44,11 @@ public class TransferRequest {
         this.receiverMobile = receiverMobile;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

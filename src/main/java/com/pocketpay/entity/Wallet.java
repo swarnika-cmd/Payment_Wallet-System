@@ -1,6 +1,7 @@
 package com.pocketpay.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "wallets")
@@ -10,7 +11,8 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double balance;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -20,7 +22,7 @@ public class Wallet {
     public Wallet() {
     }
 
-    public Wallet(Double balance, User user) {
+    public Wallet(BigDecimal balance, User user) {
         this.balance = balance;
         this.user = user;
     }
@@ -33,11 +35,11 @@ public class Wallet {
         this.id = id;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

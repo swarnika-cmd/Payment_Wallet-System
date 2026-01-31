@@ -1,6 +1,9 @@
 package com.pocketpay.entity;
 
+import com.pocketpay.enums.TransactionStatus;
+import com.pocketpay.enums.TransactionType;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,22 +14,63 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Backward compatibility fields (Deprecatable)
     private String senderMobile;
     private String receiverMobile;
-    private Double amount;
+
+    // New Core Fields
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal amount;
+
     private LocalDateTime timestamp;
-    private String status; // SUCCESS, FAILED
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionType type;
+
+    @Column(unique = true)
+    private String referenceId;
+
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "from_wallet_id")
+    private Wallet fromWallet;
+
+    @ManyToOne
+    @JoinColumn(name = "to_wallet_id")
+    private Wallet toWallet;
 
     public Transaction() {
     }
 
-    public Transaction(String senderMobile, String receiverMobile, Double amount, LocalDateTime timestamp,
-            String status) {
+    // New Constructor for full features
+    public Transaction(Wallet fromWallet, Wallet toWallet, BigDecimal amount, TransactionType type,
+            TransactionStatus status, String referenceId, String description) {
+        this.fromWallet = fromWallet;
+        this.toWallet = toWallet;
+        this.amount = amount;
+        this.type = type;
+        this.status = status;
+        this.referenceId = referenceId;
+        this.description = description;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    // Constructor for Transfer (Legacy/Simple)
+    public Transaction(String senderMobile, String receiverMobile, BigDecimal amount, TransactionType type,
+            TransactionStatus status, String referenceId) {
         this.senderMobile = senderMobile;
         this.receiverMobile = receiverMobile;
         this.amount = amount;
-        this.timestamp = timestamp;
+        this.type = type;
         this.status = status;
+        this.referenceId = referenceId;
+        this.timestamp = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -53,11 +97,11 @@ public class Transaction {
         this.receiverMobile = receiverMobile;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -69,11 +113,51 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TransactionStatus status) {
         this.status = status;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+    public String getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(String referenceId) {
+        this.referenceId = referenceId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Wallet getFromWallet() {
+        return fromWallet;
+    }
+
+    public void setFromWallet(Wallet fromWallet) {
+        this.fromWallet = fromWallet;
+    }
+
+    public Wallet getToWallet() {
+        return toWallet;
+    }
+
+    public void setToWallet(Wallet toWallet) {
+        this.toWallet = toWallet;
     }
 }
