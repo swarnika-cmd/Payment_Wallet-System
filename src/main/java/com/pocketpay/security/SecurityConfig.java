@@ -71,4 +71,19 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public org.springframework.security.web.context.SecurityContextRepository securityContextRepository() {
+        return new org.springframework.security.web.context.HttpSessionSecurityContextRepository();
+    }
+
+    // BYPASS SECURITY completely for Swagger endpoints
+    @Bean
+    public org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html");
+    }
+
 }
