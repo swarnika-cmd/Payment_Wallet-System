@@ -25,7 +25,7 @@ public class WalletController {
 
     @PostMapping("/transfer")
     public ResponseEntity<String> transferMoney(@Valid @RequestBody TransferRequest request,
-            Authentication authentication) {
+            @io.swagger.v3.oas.annotations.Parameter(hidden = true) Authentication authentication) {
         // Validate that the logged-in user is the sender
         String loggedInMobile = authentication.getName();
         if (!loggedInMobile.equals(request.getSenderMobile())) {
@@ -41,7 +41,7 @@ public class WalletController {
 
     @GetMapping("/history")
     public ResponseEntity<Page<Transaction>> getHistory(
-            Authentication authentication,
+            @io.swagger.v3.oas.annotations.Parameter(hidden = true) Authentication authentication,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "timestamp") String sortBy,

@@ -14,7 +14,14 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("PocketPay API")
                         .version("1.0")
-                        .description(
-                                "Digital Wallet API Documentation containing secured endpoints for authenticating and transferring funds."));
+                        .description("Digital Wallet API Documentation"))
+                .addSecurityItem(
+                        new io.swagger.v3.oas.models.security.SecurityRequirement().addList("Bearer Authentication"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("Bearer Authentication",
+                                new io.swagger.v3.oas.models.security.SecurityScheme()
+                                        .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")));
     }
 }
